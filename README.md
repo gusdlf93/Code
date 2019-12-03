@@ -1,5 +1,6 @@
 10 layer는 16x2000 images에 대해서 처음에 말씀하셨던 실험을 진행했습니다.
 5 layer는 16x2000 images에 대해서 2번째 Block을 제거하고 실험을 진행하였습니다.
+
 5 layer_v2는 channel을 절반으로,
 5 layer_v3는 channel을 1/4로 줄여서 실험하였습니다.
 
