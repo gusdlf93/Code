@@ -21,7 +21,6 @@ def parsing_data(path):
     return data, label
 
 def normalize(x_train, x_test):
-
     for i in range(len(x_train)):
         min = np.abs(np.min(x_train[i]))
         x_train[i] = x_train[i] + min
@@ -54,9 +53,10 @@ train_datagen = ImageDataGenerator(
     rescale=1./255
 )
 
-Models = {0 : 'basic_model_5layer', 1 : 'basic_model_10layer', 2 : 'basic_model_v2', 3: 'basic_model_v3', 4: 'LeNet', 5: 'Resnet50', 6 : 'Resnet18'}
-Model_num  = 3
-if Model_num < 5: #Resnet을 제외한 모델은 (16, 2000, 1)형태의 이미지를 Input으로
+#Models = {0 : 'basic_model_5layer', 1 : 'basic_model_10layer', 2 : 'basic_model_v2', 3: 'basic_model_v3', 4: 'LeNet', 5: 'Resnet50', 6 : 'Resnet18'}
+Models = {0 : 'basic_model_5layer', 1 : 'basic_model_10layer', 2 : 'basic_model_v2', 3: 'basic_model_v3', 4: 'LeNet_v2', 5: 'Resnet50_v2', 6 : 'Resnet18_v2', 7: 'Resnet50', 8 : 'Resnet18'}
+Model_num  = 6
+if Model_num < 7: #Resnet을 제외한 모델은 (16, 2000, 1)형태의 이미지를 Input으로
     root = r'D:\e-nose\rectangle\original'
 else :# Resnet은 (224, 224, 3) 이미지로  resized되서 학습됩니다.
     root = r'D:\e-nose\square\original'
@@ -103,7 +103,7 @@ for _, i in enumerate(root_folder):# i == iter
             validation_steps=None,
             epochs=50, verbose=1)
 
-        folder = os.path.join(r"./weight", Models[Model_num])
+        folder = os.path.join(r"D:\e-nose\WEIGHT", Models[Model_num])
         if not os.path.exists(folder):
             os.makedirs(folder)
         model.save_weights(os.path.join(folder, r"%d_%d_e-nose_1D.h5"% (_+1, __+1)))

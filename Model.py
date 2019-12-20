@@ -166,6 +166,21 @@ def Resnet50(input_shape, target_class):
     model = Model(inputs=base_model.input, outputs=preds)
     return model
 
+def Resnet50_v2(input_shape, target_class):
+    base_model = ResNet50(input_shape=input_shape, include_top=False, weights=None, input_tensor=None,
+                          pooling=None)
+
+    for layer in base_model.layers:  # 흑백 이미지라서 weight는 초기화 용으로만 사용합니다.
+        layer.trainable = True
+
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+    x = Dense(1024, activation='relu')(x)
+    preds = Dense(target_class, activation='softmax')(x)  # final layer with softmax activation
+
+    model = Model(inputs=base_model.input, outputs=preds)
+    return model
+
 def NasnetMobile(input_shape, target_class):
     base_model = NASNetMobile(input_shape=input_shape, include_top=False, weights='imagenet', input_tensor=None,
                               pooling=None)
@@ -247,12 +262,15 @@ class E_Model():
         self.target_calss = 8
 
         self.Models = {'basic_model_5layer': basic_model_5layer, 'basic_model_10layer': basic_model_10layer, 'basic_model_v2' : basic_model_v2, 'basic_model_v3' : basic_model_v3,
-                       'Resnet50': Resnet50, 'NasnetMobile': NasnetMobile, 'vgg16': vgg16,
-                       'Resnet18': Resnet18, 'Alexnet': Alexnet, "LeNet":LeNet}
+                       'Resnet50': Resnet50, 'Resnet50_v2':Resnet50_v2, 'Resnet18': Resnet18, 'Resnet18_v2': Resnet18,
+                       "LeNet":LeNet, "LeNet_v2":LeNet}
 
         if self.target_model == 'Resnet50' or self.target_model == 'Resnet18' or self.target_model == 'NasnetMobile' or self.target_model == 'Alexnet' or self.target_model == 'vgg16':
             self.color = 'rgb'
             self.input_shape = (224, 224, 3)
+        elif self.target_model == "LeNet_v2" or self.target_model == "Resnet50_v2" or self.target_model == 'Resnet18_v2':
+            self.color = 'grayscale'
+            self.input_shape = (48, 2000, 1)
         else :
             self.color = 'grayscale'
             self.input_shape = (16, 2000, 1)
